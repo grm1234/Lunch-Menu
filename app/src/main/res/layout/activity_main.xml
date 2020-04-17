@@ -9,4 +9,12 @@
         android:padding="4dp"
         android:scrollbars="vertical"
         android:background="@android:color/darker_gray"/>
+
+    <Button
+        android:id="@+id/AddItemB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:text="Add Item" />
 </RelativeLayout>

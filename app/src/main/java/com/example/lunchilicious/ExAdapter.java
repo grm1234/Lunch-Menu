@@ -1,5 +1,6 @@
 package com.example.lunchilicious;
 
+import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,9 @@ import java.util.ArrayList;
 
 public class ExAdapter extends RecyclerView.Adapter<ExAdapter.ExViewHolder>{
     private ArrayList<ExItem> MenuList;
+    Activity context;
+
+
     public static class ExViewHolder extends RecyclerView.ViewHolder{
         public TextView mTypeTV;
         public TextView mNameTV;
@@ -25,8 +29,9 @@ public class ExAdapter extends RecyclerView.Adapter<ExAdapter.ExViewHolder>{
             mDescTV = itemView.findViewById(R.id.textView4);
         }
     }
-    public ExAdapter(ArrayList<ExItem> menuList){
+    public ExAdapter(Activity context, ArrayList<ExItem> menuList){
         MenuList = menuList;
+        this.context = context;
     }
     @Override
     public ExViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
@@ -45,5 +50,10 @@ public class ExAdapter extends RecyclerView.Adapter<ExAdapter.ExViewHolder>{
     @Override
     public int getItemCount(){
         return MenuList.size();
+    }
+
+    public void setMenuItems(ArrayList<ExItem> menuItems) {
+        this.MenuList = menuItems;
+        notifyDataSetChanged();
     }
 }

@@ -6,9 +6,12 @@ import androidx.lifecycle.ViewModel;
 import java.util.ArrayList;
 
 public class MenuViewModel extends ViewModel {
-    ArrayList<ExItem> vMenu;
-    public ArrayList<ExItem> getMenuItems() {
-        if(vMenu == null){
+    private int lastId;
+    private ArrayList<ExItem> vMenu;
+    private MutableLiveData<ArrayList<ExItem>> itemData;
+    public MutableLiveData<ArrayList<ExItem>> getMenuItemsLiveData() {
+        if(itemData == null){
+            itemData = new MutableLiveData<>();
             ArrayList<ExItem> items = new ArrayList<>();
             items.add(new ExItem(1, "Hoagie", "BLT Hoagie", "Cold, Onion, lettuce, tomato", (float) 6.95));
             items.add(new ExItem(2, "Hoagie", "Cheese Hoagie", "Cheese, mayos, lettuce, tomato", (float) 6.95));
@@ -25,8 +28,34 @@ public class MenuViewModel extends ViewModel {
             items.add(new ExItem(13, "Side", "Cheese Fries", "Fries with melt cheese", (float) 4.95));
             items.add(new ExItem(14, "Side", "Onion Rings", "Deep fried onion rings", (float) 3.95));
             items.add(new ExItem(15, "Side", "Cheese Sticks", "Mozzarella cheese sticks", (float) 5.95));
-            return items;
+            lastId = items.size();
+            vMenu = items;
+            itemData.setValue(items);
+            return itemData;
         }
-        return vMenu;
+        return itemData;
+    }
+    public MenuViewModel(ExItem menuItem){
+        itemData = new MutableLiveData<>();
+        addMenuItem(menuItem);
+    }
+    public MenuViewModel(){}
+
+    public int getLastId(){
+        return lastId;
+    }
+
+    public void addMenuItem(ExItem menuItem) {
+        // add the menuItem to menuItems
+        int Iid = menuItem.getId();
+        String Itype = menuItem.getmType();
+        String Iname = menuItem.getmName();
+        String Idesc = menuItem.getmDescription();
+        Float Iprice = menuItem.getmPrice();
+        ExItem item = new ExItem(Iid, Itype, Iname, Idesc, Iprice);
+        // put the updated list to your MutableLiveData;
+        vMenu.add(menuItem);
+        itemData.setValue(vMenu);
+
     }
 }
