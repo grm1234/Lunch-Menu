@@ -9,7 +9,6 @@ import androidx.lifecycle.LiveData;
 import java.util.List;
 
 public class MenuViewModel extends AndroidViewModel {
-    private int lastId;
     private MenuItemRepository repository;
     private LiveData<List<ExItem>> itemData;
 
@@ -35,7 +34,9 @@ public class MenuViewModel extends AndroidViewModel {
         return itemData;
     }
 
-    /*public MutableLiveData<ArrayList<ExItem>> getMenuItemsLiveData() {
+}
+/*Reserve Code in case I need it in the future
+public MutableLiveData<ArrayList<ExItem>> getMenuItemsLiveData() {
         if(itemData == null){
             itemData = new MutableLiveData<>();
             ArrayList<ExItem> items = new ArrayList<>();
@@ -80,4 +81,3 @@ public class MenuViewModel extends AndroidViewModel {
         itemData.setValue(vMenu);
 
     }*/
-}

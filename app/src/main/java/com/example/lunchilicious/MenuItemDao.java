@@ -15,7 +15,7 @@ public interface MenuItemDao {
     void insert(ExItem menuItem);
 
     @Insert
-    void insertLst(List<ExItem> menuItem);
+    void insertList(List<ExItem> menuItem);
 
     @Update
     void update(ExItem menuItem);
@@ -32,6 +32,4 @@ public interface MenuItemDao {
     @Query("SELECT * FROM item WHERE id = :id")
     LiveData<List<ExItem>> getItem(int id);
 
-    //@Query("SELECT MAX(id) FROM item")
-    //LiveData<List<ExItem>> getLast();
 }

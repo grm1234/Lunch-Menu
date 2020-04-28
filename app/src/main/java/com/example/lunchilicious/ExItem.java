@@ -16,13 +16,13 @@ public class ExItem {
     @ColumnInfo(name = "price")
     public float mPrice;
 
-    public ExItem(int id, String mType, String mName, String mDescription, float mPrice){
-        this.id = id;
+    public ExItem(String mType, String mName, String mDescription, float mPrice){
         this.mType = mType;
         this.mName = mName;
         this.mDescription = mDescription;
         this.mPrice = mPrice;
     }
+    public void setId(int id){ this.id = id;}
     public int getId(){return id;}
     public String getmType(){return mType;}
     public String getmName(){return mName;}

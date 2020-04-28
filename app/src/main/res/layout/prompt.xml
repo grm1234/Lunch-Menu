@@ -10,13 +10,25 @@
         android:layout_height="wrap_content"
         android:text="New Item" />
 
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Swipe a Menu Item to delete it" />
+
     <EditText
-        android:id="@+id/IdE"
+        android:id="@+id/DAET"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="number"
-        android:text="ID" />
+        android:inputType="textPersonName"
+        android:text='Type "YES" to Delete All' />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Fill in the following boxes to add an item" />
 
     <EditText
         android:id="@+id/nameE"

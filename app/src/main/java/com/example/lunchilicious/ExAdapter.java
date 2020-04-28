@@ -14,7 +14,6 @@ import java.util.List;
 
 public class ExAdapter extends RecyclerView.Adapter<ExAdapter.ExViewHolder>{
     private List<ExItem> MenuList = new ArrayList<>();
-    Activity context;
 
     public  class ExViewHolder extends RecyclerView.ViewHolder{
         public TextView mTypeTV;
@@ -54,5 +53,8 @@ public class ExAdapter extends RecyclerView.Adapter<ExAdapter.ExViewHolder>{
     public void setMenuItems(List<ExItem> menuItems) {
         this.MenuList = menuItems;
         notifyDataSetChanged();
+    }
+    public ExItem getItemAt(int position){
+        return MenuList.get(position);
     }
 }
