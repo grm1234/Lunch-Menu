@@ -1,15 +1,41 @@
 package com.example.lunchilicious;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
-import java.util.ArrayList;
+import android.app.Application;
 
-public class MenuViewModel extends ViewModel {
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
+
+import java.util.List;
+
+public class MenuViewModel extends AndroidViewModel {
     private int lastId;
-    private ArrayList<ExItem> vMenu;
-    private MutableLiveData<ArrayList<ExItem>> itemData;
-    public MutableLiveData<ArrayList<ExItem>> getMenuItemsLiveData() {
+    private MenuItemRepository repository;
+    private LiveData<List<ExItem>> itemData;
+
+    public MenuViewModel(@NonNull Application application) {
+        super(application);
+        repository = new MenuItemRepository(application);
+        itemData = repository.getAllMenuItems();
+    }
+
+    public void insert(ExItem menuItem){
+        repository.insert(menuItem);
+    }
+
+    public void delete(ExItem menuItem){
+        repository.delete(menuItem);
+    }
+
+    public void deleteAllItems(){
+        repository.deleteAll();
+    }
+
+    public LiveData<List<ExItem>> getItemData(){
+        return itemData;
+    }
+
+    /*public MutableLiveData<ArrayList<ExItem>> getMenuItemsLiveData() {
         if(itemData == null){
             itemData = new MutableLiveData<>();
             ArrayList<ExItem> items = new ArrayList<>();
@@ -35,10 +61,6 @@ public class MenuViewModel extends ViewModel {
         }
         return itemData;
     }
-    public MenuViewModel(ExItem menuItem){
-        itemData = new MutableLiveData<>();
-        addMenuItem(menuItem);
-    }
     public MenuViewModel(){}
 
     public int getLastId(){
@@ -57,5 +79,5 @@ public class MenuViewModel extends ViewModel {
         vMenu.add(menuItem);
         itemData.setValue(vMenu);
 
-    }
+    }*/
 }

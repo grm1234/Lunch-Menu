@@ -6,16 +6,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ExAdapter extends RecyclerView.Adapter<ExAdapter.ExViewHolder>{
-    private ArrayList<ExItem> MenuList;
+    private List<ExItem> MenuList = new ArrayList<>();
     Activity context;
 
-
-    public static class ExViewHolder extends RecyclerView.ViewHolder{
+    public  class ExViewHolder extends RecyclerView.ViewHolder{
         public TextView mTypeTV;
         public TextView mNameTV;
         public TextView mDescTV;
@@ -29,10 +30,8 @@ public class ExAdapter extends RecyclerView.Adapter<ExAdapter.ExViewHolder>{
             mDescTV = itemView.findViewById(R.id.textView4);
         }
     }
-    public ExAdapter(Activity context, ArrayList<ExItem> menuList){
-        MenuList = menuList;
-        this.context = context;
-    }
+
+    @NonNull
     @Override
     public ExViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_one,parent, false);
@@ -40,7 +39,7 @@ public class ExAdapter extends RecyclerView.Adapter<ExAdapter.ExViewHolder>{
         return evh;
     }
     @Override
-    public void onBindViewHolder(ExViewHolder holder, int position){
+    public void onBindViewHolder(@NonNull ExViewHolder holder, int position){
         ExItem currentItem = MenuList.get(position);
         holder.mNameTV.setText(currentItem.getmName());
         holder.mTypeTV.setText(currentItem.getmType());
@@ -52,7 +51,7 @@ public class ExAdapter extends RecyclerView.Adapter<ExAdapter.ExViewHolder>{
         return MenuList.size();
     }
 
-    public void setMenuItems(ArrayList<ExItem> menuItems) {
+    public void setMenuItems(List<ExItem> menuItems) {
         this.MenuList = menuItems;
         notifyDataSetChanged();
     }

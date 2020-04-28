@@ -11,6 +11,14 @@
         android:text="New Item" />
 
     <EditText
+        android:id="@+id/IdE"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="number"
+        android:text="ID" />
+
+    <EditText
         android:id="@+id/nameE"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
