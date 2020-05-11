@@ -9,6 +9,9 @@ import androidx.room.Update;
 
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.http.GET;
+
 @Dao
 public interface MenuItemDao {
     @Insert
@@ -29,7 +32,7 @@ public interface MenuItemDao {
     @Query( "SELECT * FROM item ORDER BY mType, mName")
     LiveData<List<ExItem>> getAllMenuItems();
 
-    @Query("SELECT * FROM item WHERE id = :id")
-    LiveData<List<ExItem>> getItem(int id);
 
+    //@GET("/lunchilicious/menuitems")
+    //Call<List<ExItem>> getItems();
 }

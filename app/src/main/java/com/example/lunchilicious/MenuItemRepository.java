@@ -10,16 +10,13 @@ import java.util.List;
 public class MenuItemRepository {
     private MenuItemDao menuItemDao;
     private LiveData<List<ExItem>> menuItemData;
-    private int last;
 
     public MenuItemRepository(Application application){
         LunchiliciousDatabase database = LunchiliciousDatabase.getInstance(application);
         menuItemDao = database.menuItemDao();
         menuItemData = menuItemDao.getAllMenuItems();
-        //last = menuItemDao.getAllMenuItems().getValue().size() + 1;
-
     }
-    //public int lastId = menuItemDao.getAllMenuItems().getValue().size() + 1;
+    public void update(ExItem menuItem){new UpdateItemAsyncTask(menuItemDao).execute(menuItem);}
 
     public void insert(ExItem menuItem){
         new InsertItemAsyncTask(menuItemDao).execute(menuItem);
@@ -52,6 +49,18 @@ public class MenuItemRepository {
         }
     }
 
+    private static class UpdateItemAsyncTask extends AsyncTask<ExItem, Void, Void>{
+        private MenuItemDao menuItemDao;
+
+        private UpdateItemAsyncTask(MenuItemDao menuItemDao){
+            this.menuItemDao = menuItemDao;
+        }
+        @Override
+        protected Void doInBackground(ExItem... menuItems){
+            menuItemDao.update(menuItems[0]);
+            return null;
+        }
+    }
     private static class DeleteItemAsyncTask extends AsyncTask<ExItem, Void, Void>{
         private MenuItemDao menuItemDao;
 

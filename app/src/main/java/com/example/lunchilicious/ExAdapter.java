@@ -1,6 +1,7 @@
 package com.example.lunchilicious;
 
 import android.app.Activity;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +13,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExAdapter extends RecyclerView.Adapter<ExAdapter.ExViewHolder>{
-    private List<ExItem> MenuList = new ArrayList<>();
+public class ExAdapter extends RecyclerView.Adapter<ExAdapter.ExViewHolder> {
+    private List<ExItem> MenuList;
+    //private List<ExItem> MenuList = new ArrayList<>();
+    private OnItemClickListener listener;
+    private Context context;
 
     public  class ExViewHolder extends RecyclerView.ViewHolder{
         public TextView mTypeTV;
@@ -27,6 +31,15 @@ public class ExAdapter extends RecyclerView.Adapter<ExAdapter.ExViewHolder>{
             mNameTV = itemView.findViewById(R.id.textView2);
             mPriceTV = itemView.findViewById(R.id.textView3);
             mDescTV = itemView.findViewById(R.id.textView4);
+            itemView.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v){
+                    int pos = getAdapterPosition();
+                    if (listener != null && pos != RecyclerView.NO_POSITION){
+                        listener.onItemClick(MenuList.get(pos));
+                    }
+                }
+            });
         }
     }
 
@@ -56,5 +69,13 @@ public class ExAdapter extends RecyclerView.Adapter<ExAdapter.ExViewHolder>{
     }
     public ExItem getItemAt(int position){
         return MenuList.get(position);
+    }
+
+    public interface OnItemClickListener{
+        void onItemClick(ExItem menuItem);
+    }
+
+    public void setOnItemCLickListener(OnItemClickListener listener){
+        this.listener =listener;
     }
 }

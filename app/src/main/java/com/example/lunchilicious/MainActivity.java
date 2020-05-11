@@ -28,18 +28,26 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.OkHttpClient;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 
 public class MainActivity extends AppCompatActivity  implements LifecycleOwner {
-
+    String BASE_URL = "http://aristotle.cs.scranton.edu/";
+    String DEFAULT_USER = "dbuser1";
+    public static final int EDIT_ITEM_REQUEST = 1;
     private MenuViewModel menuViewModel;
     Button addB;
-    Button deleteB;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        final RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         final ExAdapter adapter = new ExAdapter();
@@ -49,6 +57,30 @@ public class MainActivity extends AppCompatActivity  implements LifecycleOwner {
             @Override
             public void onChanged(List<ExItem> exItems) {
                 adapter.setMenuItems(exItems);
+            }
+        });
+        OkHttpClient.Builder httpclient = new OkHttpClient.Builder();
+        Retrofit.Builder builder = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create());
+        Retrofit retrofit = builder.client(httpclient.build()).build();
+        menuItem menuitem = retrofit.create(menuItem.class);
+        Call<List<ExItem>> call = menuitem.reposForUser(DEFAULT_USER);
+        call.enqueue(new Callback<List<ExItem>>() {
+            @Override
+            public void onResponse(Call<List<ExItem>> call, Response<List<ExItem>> response) {
+                if(!response.isSuccessful()){
+                    //resultTV.setText("Code: " + response.code());
+                    Toast.makeText(MainActivity.this, response.code(), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                List<ExItem> menuList = response.body();
+                adapter.setMenuItems(menuList);
+            }
+
+            @Override
+            public void onFailure(Call<List<ExItem>> call, Throwable t) {
+                Toast.makeText(MainActivity.this, "ERROR", Toast.LENGTH_SHORT).show();
             }
         });
         addB = findViewById(R.id.AddItemB);
@@ -107,6 +139,39 @@ public class MainActivity extends AppCompatActivity  implements LifecycleOwner {
                 menuViewModel.delete(adapter.getItemAt(viewHolder.getAdapterPosition()));
             }
         }).attachToRecyclerView(recyclerView);
+        adapter.setOnItemCLickListener(new ExAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(ExItem menuItem) {
+                Intent intent = new Intent(MainActivity.this, EditItemActivity.class);
+                intent.putExtra(EditItemActivity.EXTRA_ID, menuItem.getId());
+                intent.putExtra(EditItemActivity.EXTRA_NAME, menuItem.getmName());
+                intent.putExtra(EditItemActivity.EXTRA_TYPE, menuItem.getmType());
+                intent.putExtra(EditItemActivity.EXTRA_PRICE, menuItem.getmPrice());
+                intent.putExtra(EditItemActivity.EXTRA_DESC, menuItem.getmDescription());
+                startActivityForResult(intent, EDIT_ITEM_REQUEST);
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == EDIT_ITEM_REQUEST && resultCode == RESULT_OK){
+            int id = data.getIntExtra(EditItemActivity.EXTRA_ID, -1);
+                    if(id == -1){Toast.makeText(this, "Item Can't Be Updated", Toast.LENGTH_SHORT).show();
+                    return;}
+            String name = data.getStringExtra(EditItemActivity.EXTRA_NAME);
+            String type = data.getStringExtra(EditItemActivity.EXTRA_TYPE);
+            String priceS = data.getStringExtra(EditItemActivity.EXTRA_PRICE);
+            String desc = data.getStringExtra(EditItemActivity.EXTRA_DESC);
+            Float pricef = Float.valueOf(priceS);
+            ExItem menuItem = new ExItem(name, type, desc, pricef);
+            menuItem.setId(id);
+            menuViewModel.update(menuItem);
+            Toast.makeText(this, "Item Updated", Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(this, "Item Not Saved", Toast.LENGTH_SHORT).show();
+        }
     }
 }
 

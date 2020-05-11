@@ -17,6 +17,7 @@ public class MenuViewModel extends AndroidViewModel {
         repository = new MenuItemRepository(application);
         itemData = repository.getAllMenuItems();
     }
+    public void update(ExItem menuItem){ repository.update(menuItem);}
 
     public void insert(ExItem menuItem){
         repository.insert(menuItem);
@@ -29,6 +30,8 @@ public class MenuViewModel extends AndroidViewModel {
     public void deleteAllItems(){
         repository.deleteAll();
     }
+
+    public void updateMenuItems(){};
 
     public LiveData<List<ExItem>> getItemData(){
         return itemData;
