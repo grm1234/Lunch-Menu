@@ -32,7 +32,4 @@ public interface MenuItemDao {
     @Query( "SELECT * FROM item ORDER BY mType, mName")
     LiveData<List<ExItem>> getAllMenuItems();
 
-
-    //@GET("/lunchilicious/menuitems")
-    //Call<List<ExItem>> getItems();
 }

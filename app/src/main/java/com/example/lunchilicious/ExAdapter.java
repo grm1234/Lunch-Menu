@@ -52,13 +52,15 @@ public class ExAdapter extends RecyclerView.Adapter<ExAdapter.ExViewHolder> {
     }
     @Override
     public void onBindViewHolder(@NonNull ExViewHolder holder, int position){
-        ExItem currentItem = MenuList.get(position);
-        holder.mNameTV.setText(currentItem.getmName());
-        holder.mTypeTV.setText(currentItem.getmType());
-        holder.mPriceTV.setText(Float.toString(currentItem.getmPrice()));
-        holder.mDescTV.setText(currentItem.getmDescription());
+        if(MenuList.get(position)!=null){
+            ExItem currentItem = MenuList.get(position);
+            holder.mNameTV.setText(currentItem.getmName());
+            holder.mTypeTV.setText(currentItem.getmType());
+            holder.mPriceTV.setText(Float.toString(currentItem.getmPrice()));
+            holder.mDescTV.setText(currentItem.getmDescription());
+        }
     }
-    @Override
+   @Override
     public int getItemCount(){
         return MenuList.size();
     }

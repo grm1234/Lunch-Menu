@@ -4,12 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,10 +18,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.OkHttpClient;
@@ -42,6 +36,7 @@ public class MainActivity extends AppCompatActivity  implements LifecycleOwner {
     public static final int EDIT_ITEM_REQUEST = 1;
     private MenuViewModel menuViewModel;
     Button addB;
+    Button umB;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,28 +54,27 @@ public class MainActivity extends AppCompatActivity  implements LifecycleOwner {
                 adapter.setMenuItems(exItems);
             }
         });
-        OkHttpClient.Builder httpclient = new OkHttpClient.Builder();
-        Retrofit.Builder builder = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create());
-        Retrofit retrofit = builder.client(httpclient.build()).build();
-        menuItem menuitem = retrofit.create(menuItem.class);
-        Call<List<ExItem>> call = menuitem.reposForUser(DEFAULT_USER);
-        call.enqueue(new Callback<List<ExItem>>() {
+        umB = findViewById(R.id.UmButton);
+        umB.setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onResponse(Call<List<ExItem>> call, Response<List<ExItem>> response) {
-                if(!response.isSuccessful()){
-                    //resultTV.setText("Code: " + response.code());
-                    Toast.makeText(MainActivity.this, response.code(), Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                List<ExItem> menuList = response.body();
-                adapter.setMenuItems(menuList);
-            }
+            public void onClick(View v){
+                OkHttpClient.Builder httpclient = new OkHttpClient.Builder();
+                Retrofit.Builder builder = new Retrofit.Builder()
+                        .baseUrl(BASE_URL)
+                        .addConverterFactory(GsonConverterFactory.create());
+                Retrofit retrofit = builder.client(httpclient.build()).build();
+                final menuItem menuitem = retrofit.create(menuItem.class);
+                Call<List<ExItem>> call = menuitem.reposForUser();
+                call.enqueue(new Callback<List<ExItem>>() {
+                    @Override public void onResponse(Call<List<ExItem>> call, Response<List<ExItem>> response) {
+                        List<ExItem> menuList = response.body();
+                        adapter.setMenuItems(menuList);
+                    }
 
-            @Override
-            public void onFailure(Call<List<ExItem>> call, Throwable t) {
-                Toast.makeText(MainActivity.this, "ERROR", Toast.LENGTH_SHORT).show();
+                    @Override public void onFailure(Call<List<ExItem>> call, Throwable t) {
+                        Toast.makeText(MainActivity.this, "ERROR", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
         addB = findViewById(R.id.AddItemB);
@@ -114,7 +108,26 @@ public class MainActivity extends AppCompatActivity  implements LifecycleOwner {
                                 Toast.makeText(getApplicationContext(),newType,Toast.LENGTH_SHORT);
                                 Toast.makeText(getApplicationContext(),newPriceS,Toast.LENGTH_SHORT);
                                 ExItem userItem = new ExItem(newType, newName,"", newPriceF);
-                                menuViewModel.insert(userItem);}
+                                menuViewModel.insert(userItem);
+                                //adding to central db
+                                OkHttpClient.Builder httpclient = new OkHttpClient.Builder();
+                                Retrofit.Builder builder = new Retrofit.Builder()
+                                        .baseUrl(BASE_URL)
+                                        .addConverterFactory(GsonConverterFactory.create());
+                                Retrofit retrofit = builder.client(httpclient.build()).build();
+                                final menuItem menuitem = retrofit.create(menuItem.class);
+                                Call<ExItem> call = menuitem.addMenuItem(userItem);
+                                call.enqueue(new Callback<ExItem>() {
+                                    @Override public void onResponse(Call<ExItem> call, Response<ExItem> response) {
+                                        ExItem menuList = response.body();
+                                        Toast.makeText(MainActivity.this, menuList.mName, Toast.LENGTH_SHORT).show();
+                                    }
+
+                                    @Override public void onFailure(Call<ExItem> call, Throwable t) {
+                                        Toast.makeText(MainActivity.this, "ERROR", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
                         }
                     }
                 })

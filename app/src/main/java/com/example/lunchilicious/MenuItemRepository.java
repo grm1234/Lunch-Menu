@@ -2,6 +2,7 @@ package com.example.lunchilicious;
 
 import android.app.Application;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
@@ -12,10 +13,11 @@ public class MenuItemRepository {
     private LiveData<List<ExItem>> menuItemData;
 
     public MenuItemRepository(Application application){
-        LunchiliciousDatabase database = LunchiliciousDatabase.getInstance(application);
+        LunchiliciousDatabase database = LunchiliciousDatabase.getDatabase(application);
         menuItemDao = database.menuItemDao();
         menuItemData = menuItemDao.getAllMenuItems();
     }
+
     public void update(ExItem menuItem){new UpdateItemAsyncTask(menuItemDao).execute(menuItem);}
 
     public void insert(ExItem menuItem){

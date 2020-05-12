@@ -31,7 +31,6 @@ public class MenuViewModel extends AndroidViewModel {
         repository.deleteAll();
     }
 
-    public void updateMenuItems(){};
 
     public LiveData<List<ExItem>> getItemData(){
         return itemData;
